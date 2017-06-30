@@ -17,11 +17,10 @@ function signin() {
             // window.location.replace('http://127.0.0.1:8000/');
             // alert("success");
             if (json.correct == "true" && json.mismatch == "no"){
-            	window.location.replace('http://127.0.0.1:8000/');
+            	window.location.replace('http://127.0.0.1:8000/signup');
             }else{
-            	alert(JSON.stringify(json));
-            	// alert(json.correct);
-            	// alert(json.mismatch);
+            	window.location.replace('http://127.0.0.1:8000/login/');
+            	// alert(JSON.stringify(json));
             }
         },
 

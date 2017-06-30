@@ -147,12 +147,9 @@ def signin(request):
 			response_data['hidcode'] = hidcode
 			response_data['correct'] = correct
 
-			code = 123
-			hidcode = 123
-
 			# determine if the user entered is correct
 			if code == hidcode:
-				login(request, user)
+				# login(request, user)
 				correct = True
 				response_data['correct'] = correct
 				return JsonResponse(response_data)

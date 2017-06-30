@@ -103,6 +103,7 @@ function verify() {
         		window.location.replace('http://127.0.0.1:8000');
         	} else if (response.correct == false) {
         		var error = "<div class='alert alert-danger' role='alert'><span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span> <span class='sr-only'>Error:</span> The code you entered is incorrect</div>"
+        		// $('#errors').html('');
         		$('#errors').html(error);
         	}else{
         		var error = "<div class='alert alert-danger' role='alert'><span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span> <span class='sr-only'>Error:</span> Anonymous error</div>"

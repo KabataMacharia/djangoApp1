@@ -8,6 +8,7 @@ $('#id_code').prop( "disabled", true );
 
 $('#post-form').on('submit', function(event){
     event.preventDefault();
+    // console.log("preventDefault")
     signin();
 });
 
@@ -100,8 +101,11 @@ function verify() {
         success : function(response) {
         	if (response.correct == true) {
         		window.location.replace('http://127.0.0.1:8000');
-        	} else {
+        	} else if (response.correct == false) {
         		var error = "<div class='alert alert-danger' role='alert'><span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span> <span class='sr-only'>Error:</span> The code you entered is incorrect</div>"
+        		$('#errors').html(error);
+        	}else{
+        		var error = "<div class='alert alert-danger' role='alert'><span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span> <span class='sr-only'>Error:</span> Anonymous error</div>"
         		$('#errors').html(error);
         	}
         },

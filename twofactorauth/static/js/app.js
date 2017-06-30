@@ -1,50 +1,114 @@
 $( document ).ready(function() {
+// hide the code field initially
+// $('#div_id_code').hide();
+$('#div_id_code').addClass( "hidden" );
+// $('#div_id_code').attr("disabled", "disabled");
+$('#id_code').prop( "disabled", true );
+
 
 $('#post-form').on('submit', function(event){
     event.preventDefault();
     signin();
 });
 
-function signin() {
+// $('#signup-form').on('submit', function(event){
+//     event.preventDefault();
+//     signup();
+// });
+
+// function to signup the user
+function signup() {
     $.ajax({
-        url : "http://127.0.0.1:8000/login/", // the endpoint
+        url : "http://127.0.0.1:8000/signup/", // the endpoint
         type : "POST", // http method
-        data : { username: $('#id_username').val(), password: $('#id_password').val(), code: $('#id_code').val(), hidcode:$('#hidcode').val() }, // data sent with the post request
+        data : { username: $('#id_username').val(), password1: $('#id_password1').val(), password2: $('#id_password2').val(), phone:$('#id_phone').val() },
 
         // handle a successful response
         success : function(response) {
-            // alert(JSON.stringify(json)); // log the returned json to the console
-            // window.location.replace('http://127.0.0.1:8000/');
-            // alert("success");
-            if (response.correct == true && response.mismatch == "no"){
-            	// alert(JSON.stringify(response));
-            	window.location.replace('http://127.0.0.1:8000');
-            }else{
-            	// var error = "<P>the error</p>"
-            	if (response.correct == false) {
-            		var error = "<div class='alert alert-danger' role='alert'><span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span> <span class='sr-only'>Error:</span> The code you entered is incorrect</div>"
-            		$('#errors').html(error);
-            	} else {
-            		var error = "<div class='alert alert-danger' role='alert'><span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span> <span class='sr-only'>Error:</span> The password and username dont match</div>"
-            		$('#errors').html(error);
-
-            	}
-            	// var error = "<div class='alert alert-danger' role='alert'><span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span> <span class='sr-only'>Error:</span> Enter a valid email address</div>"
-
-            	// window.location.replace('http://127.0.0.1:8000/login/');
-            	// $('#errors').html("<div class="alert alert-danger" role="alert"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> <span class="sr-only">Error:</span> Enter a valid email address</div>"); 
-            	
-            	// $( '#errors' ).replaceWith( "<h2>New heading</h2>" );
-            	// alert("your username or password is incorect");
-            }
+        	alert(JSON.stringify(response));
         },
 
         // handle a non-successful response
         error : function(xhr,errmsg,err) {
-            // $('#errors').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+
-            //     " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
-            // alert(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
-            alert("error")
+            alert("error in signup")
+        }
+    });
+};
+
+function signin() {
+    $.ajax({
+        url : "http://127.0.0.1:8000/login/", // the endpoint
+        type : "POST", // http method
+        // data : { username: $('#id_username').val(), password: $('#id_password').val(), code: $('#id_code').val(), hidcode:$('#hidcode').val() }, // data sent with the post request
+        data : { username: $('#id_username').val(), password: $('#id_password').val(), type_post:'auth' },
+
+        // handle a successful response
+        success : function(response) {
+        	if (response.mismatch == "no") {
+        		// window.location.replace('http://127.0.0.1:8000');
+        		switchElements()
+        		$('#post-form').on('submit', function(event){
+				    event.preventDefault();
+				    verify();
+				});
+        	} else {
+        		var error = "<div class='alert alert-danger' role='alert'><span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span> <span class='sr-only'>Error:</span> The password and username dont match</div>"
+        		$('#errors').html(error);
+        	}
+            // if (response.correct == true && response.mismatch == "no"){
+            // 	// alert(JSON.stringify(response));
+            // 	window.location.replace('http://127.0.0.1:8000');
+            // }else{
+            // 	if (response.correct == false) {
+            // 		var error = "<div class='alert alert-danger' role='alert'><span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span> <span class='sr-only'>Error:</span> The code you entered is incorrect</div>"
+            // 		$('#errors').html(error);
+            // 	} else {
+            // 		var error = "<div class='alert alert-danger' role='alert'><span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span> <span class='sr-only'>Error:</span> The password and username dont match</div>"
+            // 		$('#errors').html(error);
+
+            // 	}
+            // }
+        },
+
+        // handle a non-successful response
+        error : function(xhr,errmsg,err) {
+            alert("error in auth")
+        }
+    });
+};
+function switchElements() {
+	// hide the top part of the form
+	//the username
+	$('#div_id_username').addClass( "hidden" );
+	$('#id_username').prop( "disabled", true );
+	// password
+	$('#div_id_password').addClass( "hidden" );
+	$('#id_password').prop( "disabled", true );
+	// enable the previously disabled code field
+	$('#div_id_code').removeClass( "hidden" );
+	$('#id_code').prop( "disabled", false );	
+}
+
+function verify() {
+	switchElements()
+    $.ajax({
+        url : "http://127.0.0.1:8000/login/", // the endpoint
+        type : "POST", // http method
+        data : { code: $('#id_code').val(), hidcode:$('#hidcode').val(), type_post:'verify' },
+
+        // handle a successful response
+        success : function(response) {
+        	if (response.correct == true) {
+        		window.location.replace('http://127.0.0.1:8000');
+        	} else {
+        		var error = "<div class='alert alert-danger' role='alert'><span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span> <span class='sr-only'>Error:</span> The code you entered is incorrect</div>"
+        		$('#errors').html(error);
+        	}
+        },
+
+        // handle a non-successful response
+        error : function(xhr,errmsg,err) {
+            alert("error in verify")
         }
     });
 };

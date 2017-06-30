@@ -113,17 +113,17 @@ def signin(request):
 			if user is not None:
 				login(request, user)
 				# return redirect('home')
-				response_data['mismatch'] = "no"
+				response_data['mismatch'] = 'no'
 				return JsonResponse(response_data)
 
 			else:
-				response_data['mismatch'] = "yes"
+				response_data['mismatch'] = 'yes'
 				return JsonResponse(response_data)
 				# return JsonResponse({"bad password": "They are not matching"})
 		else:
 			return JsonResponse(response_data)
 			# return JsonResponse({"bad code": "no matching code"})
-	else:
+	elif request.method == 'GET' and not  request.user.is_authenticated():
 		form = SignInForm()
 		# customer_id = "A7A625FD-AFE4-4E3D-AE51-DEBF9CCAA1BA"
 		# api_key = "DuhC8MQ71NO89g2eamglt64gNN31+luy0TShI4zXn6K5OEbNRf98FSC5lmUPr5pf7zZNJlKzooY0b60hki4fKQ=="
@@ -139,3 +139,5 @@ def signin(request):
 		# sendOTP()
 		return render(request, 'login.html', {'form':form,"code":verify_code})
 		# return JsonResponse({"nothing to see": "this isn't happening"})
+	else:
+		return redirect('home')

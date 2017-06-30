@@ -1,4 +1,4 @@
-$(function() {
+$( document ).ready(function() {
 
 $('#post-form').on('submit', function(event){
     event.preventDefault();
@@ -12,15 +12,30 @@ function signin() {
         data : { username: $('#id_username').val(), password: $('#id_password').val(), code: $('#id_code').val(), hidcode:$('#hidcode').val() }, // data sent with the post request
 
         // handle a successful response
-        success : function(json) {
+        success : function(response) {
             // alert(JSON.stringify(json)); // log the returned json to the console
             // window.location.replace('http://127.0.0.1:8000/');
             // alert("success");
-            if (json.correct == "true" && json.mismatch == "no"){
-            	window.location.replace('http://127.0.0.1:8000/signup');
+            if (response.correct == true && response.mismatch == "no"){
+            	// alert(JSON.stringify(response));
+            	window.location.replace('http://127.0.0.1:8000');
             }else{
-            	window.location.replace('http://127.0.0.1:8000/login/');
-            	// alert(JSON.stringify(json));
+            	// var error = "<P>the error</p>"
+            	if (response.correct == false) {
+            		var error = "<div class='alert alert-danger' role='alert'><span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span> <span class='sr-only'>Error:</span> The code you entered is incorrect</div>"
+            		$('#errors').html(error);
+            	} else {
+            		var error = "<div class='alert alert-danger' role='alert'><span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span> <span class='sr-only'>Error:</span> The password and username dont match</div>"
+            		$('#errors').html(error);
+
+            	}
+            	// var error = "<div class='alert alert-danger' role='alert'><span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span> <span class='sr-only'>Error:</span> Enter a valid email address</div>"
+
+            	// window.location.replace('http://127.0.0.1:8000/login/');
+            	// $('#errors').html("<div class="alert alert-danger" role="alert"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> <span class="sr-only">Error:</span> Enter a valid email address</div>"); 
+            	
+            	// $( '#errors' ).replaceWith( "<h2>New heading</h2>" );
+            	// alert("your username or password is incorect");
             }
         },
 
@@ -60,6 +75,7 @@ function signin() {
         // these HTTP methods do not require CSRF protection
         return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
     }
+
     function sameOrigin(url) {
         // test that a given url is a same-origin URL
         // url could be relative or scheme relative or absolute

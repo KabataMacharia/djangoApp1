@@ -30,17 +30,49 @@ def sendOTP():
 def home(request):
     return render(request, 'home.html')
 
-def signup(request):
-	
+def signup(request):	
     if request.method == 'POST':
-    	# username = request.POST.get('username')
-    	# phone = request.POST.get('phone')
-    	# password1 = request.POST.get('password1')
-    	# password2 = request.POST.get('password2')
-    	# # make the data to bind to the form
-    	# formdata = {'username':username,'phone':phone,'password1':password1,'password2':password2}
-    	# form = SignUpForm(formdata)
-    	form = SignUpForm(request.POST)
+    	username = request.POST.get('username')
+    	phone = request.POST.get('phone')
+    	password1 = request.POST.get('password1')
+    	password2 = request.POST.get('password2')
+    	response_data = {}
+    	response_data['username'] = username
+    	response_data['password1'] = password1
+    	response_data['password2'] = password2
+    	response_data['phone'] = phone
+    	# try:
+    	# 	user = User.objects.create_user(username, 'lennon@thebeatles.com', '1234pass')
+    	# 	user.refresh_from_db()
+    	# 	user.profile.phone = phone
+    	# 	user.save()
+    	# 	raw_password = password1
+    	# 	user = authenticate(username=username, password=raw_password)
+    	# 	login(request, user)
+    	# 	response_data['registered'] = "yes"
+    	# 	return JsonResponse(response_data)
+    	# except:
+    	# 	response_data['registered'] = "no"
+    	# 	return JsonResponse(response_data)
+    	# User.objects.create_user("tom", 'lennon@thebeatles.com', '1234pass')
+    	# user = User.objects.create_user(username, 'lennon@thebeatles.com', '1234pass')
+    	# if user is not None:
+    	# 	user.refresh_from_db()
+    	# 	user.profile.phone = '+254702029382'
+    	# 	user.save()
+    	# 	raw_password = password1
+    	# 	user = authenticate(username=username, password=raw_password)
+    	# 	login(request, user)
+    	# 	response_data['registered'] = "yes"
+    	# 	return JsonResponse(response_data)
+    	# else:
+    	# 	response_data['registered'] = "no"
+    	# 	return JsonResponse(response_data)
+
+    	# make the data to bind to the form
+    	formdata = {'username':username,'phone':phone,'password1':password1,'password2':password2}
+    	form = SignUpForm(formdata)
+    	# form = SignUpForm(request.POST)
     	if form.is_valid():
     		# user = User(username=username, password1=password1, password2=password2)
     		# user.save()
@@ -54,66 +86,24 @@ def signup(request):
     		raw_password = form.cleaned_data.get('password1')
     		user = authenticate(username=user.username, password=raw_password)
     		login(request, user)
-    		return redirect('home')
 
-    		# response_data = {}
-    		# response_data['username'] = username
-    		# response_data['password'] = password
-    		# return JsonResponse(response_data)
+    		response_data = {}
+    		response_data['username'] = username
+    		response_data['password'] = password1
+    		response_data['registered'] = "yes"
+    		return JsonResponse(response_data)
     	else:
-    		return redirect('home')
-    		# response_data = {}
-    		# response_data['username'] = username
-    		# response_data['password'] = password1
+    		# return redirect('home')
+    		response_data = {}
+    		response_data['username'] = username
+    		response_data['password'] = password1
+    		response_data['registered'] = "no"
     		# return JsonResponse(response_data)
-
-    		# return JsonResponse(form.errors)
+    		return JsonResponse(form.errors)
     else:
         form = SignUpForm()
-    return render(request, 'signup.html', {'form': form})
+        return render(request, 'signup.html', {'form': form})
 
-# def signin(request):
-# 	if request.method == 'POST':
-
-# 		form = SignInForm(request.POST)
-# 		if form.is_valid:
-# 			username = request.POST['username']
-# 			password = request.POST['password']
-# 			code = request.POST['code']
-# 			send_code = request.POST['hidcode']
-
-# 			# username = "otp"
-# 			# password = "1234pass"
-# 			# code = "123wq"
-# 			# username = form.cleaned_data.get('username')
-# 			# password = form.cleaned_data.get('password') 
-# 			# code  = form.cleaned_data.get('code')
-# 			if code.strip() == send_code:
-# 				user = authenticate( username=username, password=password)
-# 				if user is not None:
-# 					login(request, user)
-# 					return redirect('home')
-# 				else:
-# 					return render(request, 'mismatched_credentials.html',)
-# 			else:
-# 				return render(request, 'bad_code.html', {})
-# 	else:
-# 		form = SignInForm()
-# 		customer_id = "A7A625FD-AFE4-4E3D-AE51-DEBF9CCAA1BA"
-# 		api_key = "DuhC8MQ71NO89g2eamglt64gNN31+luy0TShI4zXn6K5OEbNRf98FSC5lmUPr5pf7zZNJlKzooY0b60hki4fKQ=="
-
-# 		phone_number = "+254702029382"
-# 		verify_code = random_with_n_digits(5)
-# 		message = "Your code is {}".format(verify_code)
-# 		message_type = "OTP"
-
-# 		messaging = MessagingClient(customer_id, api_key)
-# 		response = messaging.message(phone_number, message, message_type)
-# 		# sendOTP()
-# 		return render(request, 'login.html', {'form':form,"code":verify_code})
-
-
-@csrf_exempt
 def signin(request):
 	if request.method == 'POST':
 		# get the part of the form being processed
@@ -167,49 +157,10 @@ def signin(request):
 				password = request.session['password']
 				user = authenticate( username=username, password=password)
 				login(request, user)
-				
+
 				return JsonResponse(response_data)
 			else:
 				return JsonResponse(response_data)
-
-
-		# username = request.POST.get('username')
-		# password = request.POST.get('password')
-		# code = request.POST.get('code')
-		# hidcode = request.POST.get('hidcode')
-		# response_data = {}
-		# correct = False
-
-		# response_data['username'] = username
-		# response_data['code'] = code
-		# response_data['hidcode'] = hidcode
-		# response_data['password'] = password
-		# response_data['correct'] = correct
-		# if code == hidcode:
-		# 	correct = True
-		# 	response_data['correct'] = correct
-		# 	user = authenticate( username=username, password=password)
-		# 	if user is not None:
-		# 		login(request, user)
-		# 		response_data['mismatch'] = 'no'
-		# 		return JsonResponse(response_data)
-
-		# 	else:
-		# 		response_data['mismatch'] = 'yes'
-		# 		return JsonResponse(response_data)
-		# 		# return JsonResponse({"bad password": "They are not matching"})
-		# else:
-		# 	return JsonResponse(response_data)
-			# return JsonResponse({"bad code": "no matching code"})
-
-		# user = authenticate( username=username, password=password)
-		# if user is not None:
-		# 	login(request, user)
-		# 	response_data['mismatch'] = 'no'
-		# 	return JsonResponse(response_data)
-		# else:
-		# 	response_data['mismatch'] = 'yes'
-		# 	return JsonResponse(response_data)
 	elif request.method == 'GET' and not  request.user.is_authenticated():
 		form = SignInForm()
 		# customer_id = "A7A625FD-AFE4-4E3D-AE51-DEBF9CCAA1BA"

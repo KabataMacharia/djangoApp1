@@ -3,17 +3,17 @@ $( document ).ready(function() {
 	// $('#div_id_code').attr("disabled", "disabled");
 	$('#id_code').prop( "disabled", true );
 
-    $("h3").text("context")
+    // $("h3").text("context")
 
     $('#auth').click(function(e) {
         e.preventDefault();
     	signin();
     });
 
-    // $('#verify').click(function(e) {
-    //     e.preventDefault();
-    // 	verify();
-    // });
+    $('#signup-form').on('submit', function(event){
+        event.preventDefault();
+        signup();
+    });
 
     function signup() {
     $.ajax({
@@ -23,12 +23,29 @@ $( document ).ready(function() {
 
         // handle a successful response
         success : function(response) {
-        	alert(JSON.stringify(response));
+            
+            if (response.registered == "yes") {
+                window.location.replace('http://127.0.0.1:8000');
+            } else {
+                // console.log(JSON.stringify(response))
+                // var result = $.parseJSON(response);
+                var error
+                $.each(response, function(k, errorvalue) {
+                    //display the key and value pair
+                   console.log( errorvalue);
+                   error += "<div class='alert alert-danger' role='alert'><span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span> <span class='sr-only'>Error:</span>"+errorvalue+"</div>"
+                  
+                });
+                 $('#errors').html(error);
+                // var error = "<div class='alert alert-danger' role='alert'><span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span> <span class='sr-only'>Error:</span> JSON.stringify(response)</div>"
+                // $('#errors').html(error);
+            }
+            
         },
 
         // handle a non-successful response
         error : function(xhr,errmsg,err) {
-            alert("error in signup")
+            console.log("error in signup")
         }
     });
 	};
@@ -70,7 +87,7 @@ $( document ).ready(function() {
 	$('#id_code').prop( "disabled", false );
     $('input[type="submit"]').replaceWith('<input class="btn btn-block btn-primary" id="verify" type="submit" name="button" value="verify code"/>');
 	}
-    
+
     $(document).on('click','#verify',(function(e) {
         e.preventDefault();
         $.ajax({

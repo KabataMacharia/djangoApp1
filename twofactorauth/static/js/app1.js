@@ -1,33 +1,21 @@
 $( document ).ready(function() {
-// hide the code field initially
-// $('#div_id_code').hide();
-// $('#div_id_code').addClass( "hidden" );
-// $('#div_id_code').attr("disabled", "disabled");
-// $('#id_code').prop( "disabled", true );
+	$('#div_id_code').addClass( "hidden" );
+	// $('#div_id_code').attr("disabled", "disabled");
+	$('#id_code').prop( "disabled", true );
 
+    $("h3").text("context")
 
-// $('#post-form').on('submit', function(event){
-//     event.preventDefault();
-//     // console.log("preventDefault")
-//     signin();
-// });
-$("h3").text("context")
-$('#auth').click(function(e){
-    e.preventDefault();
-    signin();    
-})​;
+    $('#auth').click(function(e) {
+        e.preventDefault();
+    	signin();
+    });
 
-$('#verify').click(function(e){
-    e.preventDefault();
-    verify();    
-})​;
-// $('#signup-form').on('submit', function(event){
-//     event.preventDefault();
-//     signup();
-// });
+    // $('#verify').click(function(e) {
+    //     e.preventDefault();
+    // 	verify();
+    // });
 
-// function to signup the user
-function signup() {
+    function signup() {
     $.ajax({
         url : "http://127.0.0.1:8000/signup/", // the endpoint
         type : "POST", // http method
@@ -43,48 +31,35 @@ function signup() {
             alert("error in signup")
         }
     });
-};
+	};
 
-function signin() {
+	function signin() {
     $.ajax({
         url : "http://127.0.0.1:8000/login/", // the endpoint
         type : "POST", // http method
-        // data : { username: $('#id_username').val(), password: $('#id_password').val(), code: $('#id_code').val(), hidcode:$('#hidcode').val() }, // data sent with the post request
-        data : { username: $('#id_username').val(), password: $('#id_password').val(), type_post:'auth' },
+        data : {csrfmiddlewaretoken: csrftoken, username: $('#id_username').val(), password: $('#id_password').val(), type_post:'auth' },
 
         // handle a successful response
         success : function(response) {
         	if (response.mismatch == "no") {
-        		// window.location.replace('http://127.0.0.1:8000');
         		switchElements()
         	} else {
         		var error = "<div class='alert alert-danger' role='alert'><span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span> <span class='sr-only'>Error:</span> The password and username dont match</div>"
         		$('#errors').html(error);
         	}
-            // if (response.correct == true && response.mismatch == "no"){
-            // 	// alert(JSON.stringify(response));
-            // 	window.location.replace('http://127.0.0.1:8000');
-            // }else{
-            // 	if (response.correct == false) {
-            // 		var error = "<div class='alert alert-danger' role='alert'><span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span> <span class='sr-only'>Error:</span> The code you entered is incorrect</div>"
-            // 		$('#errors').html(error);
-            // 	} else {
-            // 		var error = "<div class='alert alert-danger' role='alert'><span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span> <span class='sr-only'>Error:</span> The password and username dont match</div>"
-            // 		$('#errors').html(error);
-
-            // 	}
-            // }
         },
 
         // handle a non-successful response
         error : function(xhr,errmsg,err) {
             alert("error in auth")
-        }
-    });
-};
-function switchElements() {
+	        }
+	    });
+	};
+
+	function switchElements() {
 	// hide the top part of the form
 	//the username
+    $('#errors').html( "" );
 	$('#div_id_username').addClass( "hidden" );
 	$('#id_username').prop( "disabled", true );
 	// password
@@ -93,21 +68,21 @@ function switchElements() {
 	// enable the previously disabled code field
 	$('#div_id_code').removeClass( "hidden" );
 	$('#id_code').prop( "disabled", false );
-	// $('input[type="submit"]').prop( "id", "verify" );
-	$('input[type="submit"]').val('changed');	
-}
-
-function verify() {
-	// switchElements()
-    $.ajax({
-        url : "http://127.0.0.1:8000/login/", // the endpoint
+    $('input[type="submit"]').replaceWith('<input class="btn btn-block btn-primary" id="verify" type="submit" name="button" value="verify code"/>');
+	}
+    
+    $(document).on('click','#verify',(function(e) {
+        e.preventDefault();
+        $.ajax({
+        url : "http://127.0.0.1:8000/login/",
         type : "POST", // http method
-        data : { code: $('#id_code').val(), hidcode:$('#hidcode').val(), type_post:'verify' },
+        data : { csrfmiddlewaretoken: csrftoken, code: $('#id_code').val(), hidcode:$('#hidcode').val(), type_post:'verify' },
 
         // handle a successful response
         success : function(response) {
         	if (response.correct == true) {
         		window.location.replace('http://127.0.0.1:8000');
+                // console.log('hello2');
         	} else if (response.correct == false) {
         		var error = "<div class='alert alert-danger' role='alert'><span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span> <span class='sr-only'>Error:</span> The code you entered is incorrect</div>"
         		// $('#errors').html('');
@@ -121,33 +96,31 @@ function verify() {
         // handle a non-successful response
         error : function(xhr,errmsg,err) {
             alert("error in verify")
-        }
-    });
-};
-
-// This function gets cookie with a given name
-    function getCookie(name) {
-        var cookieValue = null;
-        if (document.cookie && document.cookie != '') {
-            var cookies = document.cookie.split(';');
-            for (var i = 0; i < cookies.length; i++) {
-                var cookie = jQuery.trim(cookies[i]);
-                // Does this cookie string begin with the name we want?
-                if (cookie.substring(0, name.length + 1) == (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
             }
-        }
-        return cookieValue;
-    }
-    var csrftoken = getCookie('csrftoken');
+            });
+        }));
 
-    /*
-    The functions below will create a header with csrftoken
-    */
 
-    function csrfSafeMethod(method) {
+
+	function getCookie(name) {
+	        var cookieValue = null;
+	        if (document.cookie && document.cookie != '') {
+	            var cookies = document.cookie.split(';');
+	            for (var i = 0; i < cookies.length; i++) {
+	                var cookie = jQuery.trim(cookies[i]);
+	                // Does this cookie string begin with the name we want?
+	                if (cookie.substring(0, name.length + 1) == (name + '=')) {
+	                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+	                    break;
+	                }
+	            }
+	        }
+	        return cookieValue;
+	    }
+
+	var csrftoken = getCookie('csrftoken');
+
+	function csrfSafeMethod(method) {
         // these HTTP methods do not require CSRF protection
         return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
     }
@@ -176,5 +149,4 @@ function verify() {
             }
         }
     });
-
 });

@@ -19,7 +19,7 @@ from django.contrib.auth import views as auth_views
 from accounts import views 
 
 from django.contrib import admin
-
+import debug_toolbar
 urlpatterns = [
     
     url(r'^$', views.home, name='home'),
@@ -29,5 +29,6 @@ urlpatterns = [
     url(r'^login/$', views.signin, name='login'),
     # url(r'^verify/$', views.verify, name='verify'),
     url(r'^admin/', admin.site.urls),
+    url(r'^__debug__/', include(debug_toolbar.urls)),
 ]
 # + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

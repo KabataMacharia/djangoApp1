@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import login, authenticate
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
@@ -111,9 +112,12 @@ def signup(request):
 # 		# sendOTP()
 # 		return render(request, 'login.html', {'form':form,"code":verify_code})
 
+
+@csrf_exempt
 def signin(request):
 	if request.method == 'POST':
 		# get the part of the form being processed
+		request_type = 'verify'
 		request_type = request.POST.get('type_post')
 		if request_type == 'auth':
 			# if first part, get the username and password
@@ -129,6 +133,8 @@ def signin(request):
 			user = authenticate( username=username, password=password)
 			if user is not None:
 				# login the user after auth
+				request.session['username'] = username
+				request.session['password'] = password
 				# login(request, user)
 				response_data['mismatch'] = 'no'
 				return JsonResponse(response_data)
@@ -138,22 +144,31 @@ def signin(request):
 				return JsonResponse(response_data)
 		elif request_type == 'verify':
 			# if processing the code, get it and the hidden one
-			code = request.POST.get('code')
-			hidcode = request.POST.get('hidcode')
+			code = request.POST.get('code', 0)
+			hidcode = request.POST.get('hidcode', 0)
+
+			# code = 1
+			# hidcode = 1
 			# make a dictionary of responses for json
 			response_data = {}
 			correct = False
 			response_data['code'] = code
 			response_data['hidcode'] = hidcode
 			response_data['correct'] = correct
+			# return JsonResponse(response_data)
 
 			# determine if the user entered is correct
+
 			if code == hidcode:
 				# login(request, user)
 				correct = True
 				response_data['correct'] = correct
+				username = request.session['username']
+				password = request.session['password']
+				user = authenticate( username=username, password=password)
+				login(request, user)
+				
 				return JsonResponse(response_data)
-			# for when the code is not correct
 			else:
 				return JsonResponse(response_data)
 

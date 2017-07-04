@@ -33,44 +33,20 @@ def home(request):
 
 def signup(request):	
     if request.method == 'POST':
-    	username = request.POST.get('username')
-    	phone = request.POST.get('phone')
-    	password1 = request.POST.get('password1')
-    	password2 = request.POST.get('password2')
-    	response_data = {}
-    	response_data['username'] = username
-    	response_data['password1'] = password1
-    	response_data['password2'] = password2
-    	response_data['phone'] = phone
-    	
-    	# make the data to bind to the form
-    	Profile.objects.filter(phone=phone)
-    	formdata = {'username':username,'phone':phone,'password1':password1,'password2':password2}
-    	form = SignUpForm(formdata)
-    	# form = SignUpForm(request.POST)
+    	form = SignUpForm(request.POST)
     	if form.is_valid():
-    		user = form.save()
-    		user.refresh_from_db()  # load the profile instance created by the signal
-    		# user.profile.phone = form.cleaned_data.get('phone')
-    		user.profile.phone = phone
-    		user.save()
-    		# raw_password = form.cleaned_data.get('password1')
-    		raw_password = password1
+    		user,profile = form.save()
+    		raw_password = form.cleaned_data.get('password1')
     		user = authenticate(username=user.username, password=raw_password)
+    		username = form.cleaned_data.get('username')
     		login(request, user)
 
     		response_data = {}
-    		response_data['username'] = username
-    		response_data['password'] = password1
     		response_data['registered'] = "yes"
     		return JsonResponse(response_data)
     	else:
-    		# return redirect('home')
     		response_data = {}
-    		response_data['username'] = username
-    		response_data['password'] = password1
     		response_data['registered'] = "no"
-    		# return JsonResponse(response_data)
     		return JsonResponse(form.errors)
     elif request.user.is_authenticated():
     	return redirect('home')

@@ -3,9 +3,9 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import login, authenticate
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
 from django.http import JsonResponse
-from .models import Profile
+from .models import User
 
 
 # telesign imports
@@ -77,6 +77,7 @@ def signin(request):
 				request.session['password'] = password
 				# login(request, user)
 				response_data['mismatch'] = 'no'
+				request.session['code'] = 65432
 				return JsonResponse(response_data)
 			#the user doesnt have correct credentials
 			else:
@@ -110,6 +111,8 @@ def signin(request):
 			else:
 				return JsonResponse(response_data)
 	elif request.method == 'GET' and not  request.user.is_authenticated():
+		# get the stored phone number
+		# phone_number = request.user.profile.phone
 		form = SignInForm()
 		# customer_id = "A7A625FD-AFE4-4E3D-AE51-DEBF9CCAA1BA"
 		# api_key = "DuhC8MQ71NO89g2eamglt64gNN31+luy0TShI4zXn6K5OEbNRf98FSC5lmUPr5pf7zZNJlKzooY0b60hki4fKQ=="

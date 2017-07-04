@@ -1,9 +1,11 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm,AuthenticationForm
 from django.forms import ModelForm
-from django.contrib.auth.models import User
-from .models import Profile
+# from django.contrib.auth.models import User
+# from .models import Profile
+from .models import User
 from django.core import validators
+from django.core.validators import RegexValidator
 from django.core.exceptions import ValidationError
 
 # for ensuring the phone number is unique
@@ -12,7 +14,7 @@ def validate_phone(value):
     raise ValidationError("This phone number:"+value+" is already used ")
 
 class SignUpForm(UserCreationForm):
-    phone = forms.CharField(help_text='Your phone number',validators=[validate_phone])
+    phone = forms.CharField(help_text='Your phone number',validators=[validate_phone,RegexValidator('^[0-9]{10}$', message="phone number should be 10 digits")])
 
     class Meta:
         model = User

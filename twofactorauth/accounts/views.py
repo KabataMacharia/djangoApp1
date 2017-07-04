@@ -5,6 +5,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.http import JsonResponse
+from .models import Profile
 
 
 # telesign imports
@@ -41,44 +42,20 @@ def signup(request):
     	response_data['password1'] = password1
     	response_data['password2'] = password2
     	response_data['phone'] = phone
-    	# try:
-    	# 	user = User.objects.create_user(username, 'lennon@thebeatles.com', '1234pass')
-    	# 	user.refresh_from_db()
-    	# 	user.profile.phone = phone
-    	# 	user.save()
-    	# 	raw_password = password1
-    	# 	user = authenticate(username=username, password=raw_password)
-    	# 	login(request, user)
-    	# 	response_data['registered'] = "yes"
-    	# 	return JsonResponse(response_data)
-    	# except:
-    	# 	response_data['registered'] = "no"
-    	# 	return JsonResponse(response_data)
-    	# User.objects.create_user("tom", 'lennon@thebeatles.com', '1234pass')
-    	# user = User.objects.create_user(username, 'lennon@thebeatles.com', '1234pass')
-    	# if user is not None:
-    	# 	user.refresh_from_db()
-    	# 	user.profile.phone = '+254702029382'
-    	# 	user.save()
-    	# 	raw_password = password1
-    	# 	user = authenticate(username=username, password=raw_password)
-    	# 	login(request, user)
-    	# 	response_data['registered'] = "yes"
-    	# 	return JsonResponse(response_data)
-    	# else:
-    	# 	response_data['registered'] = "no"
-    	# 	return JsonResponse(response_data)
-
+    	
     	# make the data to bind to the form
+    	Profile.objects.filter(phone=phone)
     	formdata = {'username':username,'phone':phone,'password1':password1,'password2':password2}
     	form = SignUpForm(formdata)
     	# form = SignUpForm(request.POST)
     	if form.is_valid():
     		user = form.save()
     		user.refresh_from_db()  # load the profile instance created by the signal
-    		user.profile.phone = form.cleaned_data.get('phone')
+    		# user.profile.phone = form.cleaned_data.get('phone')
+    		user.profile.phone = phone
     		user.save()
-    		raw_password = form.cleaned_data.get('password1')
+    		# raw_password = form.cleaned_data.get('password1')
+    		raw_password = password1
     		user = authenticate(username=user.username, password=raw_password)
     		login(request, user)
 
@@ -95,6 +72,8 @@ def signup(request):
     		response_data['registered'] = "no"
     		# return JsonResponse(response_data)
     		return JsonResponse(form.errors)
+    elif request.user.is_authenticated():
+    	return redirect('home')
     else:
         form = SignUpForm()
         return render(request, 'signup.html', {'form': form})
@@ -132,8 +111,6 @@ def signin(request):
 			code = request.POST.get('code', 0)
 			hidcode = request.POST.get('hidcode', 0)
 
-			# code = 1
-			# hidcode = 1
 			# make a dictionary of responses for json
 			response_data = {}
 			correct = False

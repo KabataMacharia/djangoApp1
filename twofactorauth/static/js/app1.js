@@ -40,6 +40,9 @@ $( document ).ready(function() {
                         error += "<p class='alert alert-danger' role='alert'><span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span> <span class='sr-only'>Error:</span>"+errorvalue+"</p>";
                     }                  
                 });
+                // if (typeof(response.exists) != "undefined") {
+                //     error += "<p class='alert alert-danger' role='alert'><span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span> <span class='sr-only'>Error:</span>The phone number must be unique</p>";
+                // } 
                 // display the errors
                  $('#errors').html(error);
             }

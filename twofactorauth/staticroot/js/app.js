@@ -11,7 +11,7 @@ $( document ).ready(function() {
 //     // console.log("preventDefault")
 //     signin();
 // });
-$('#top').text("New header");
+$("h3").text("context")
 $('#auth').click(function(e){
     e.preventDefault();
     signin();    
@@ -98,7 +98,7 @@ function switchElements() {
 }
 
 function verify() {
-	switchElements()
+	// switchElements()
     $.ajax({
         url : "http://127.0.0.1:8000/login/", // the endpoint
         type : "POST", // http method

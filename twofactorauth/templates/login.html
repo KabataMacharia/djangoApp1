@@ -15,21 +15,7 @@
 
   </div>
     <form method="post" id="post-form">
-    {% csrf_token %}
-    <!-- {{ user_form.as_p }}
-    {{ profile_form.as_p }} -->
-        <!-- {% for field in form %}
-          <p>
-          {{ field.label_tag }}<br>
-          {{ field }}
-          {% if field.help_text %}
-            <small style="color: grey">{{ field.help_text }}</small>
-          {% endif %}
-          {% for error in field.errors %}
-            <p style="color: red">{{ error }}</p>
-          {% endfor %}
-          </p>
-        {% endfor %} -->
+        {% csrf_token %}
         {{ form|crispy }}
       <input type="hidden" id="hidcode" name="hidcode" value="{{ code }}">
       <input class='btn btn-block btn-primary' id="auth" type="submit" value="{% trans 'Submit' %}" />

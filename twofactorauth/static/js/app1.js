@@ -19,7 +19,7 @@ $( document ).ready(function() {
     $.ajax({
         url : "http://127.0.0.1:8000/signup/", // the endpoint
         type : "POST", // http method
-        data : { username: $('#id_username').val(), password1: $('#id_password1').val(), password2: $('#id_password2').val(), phone:$('#id_phone').val() },
+        data : { username: $('#id_username').val(),email: $('#id_email').val(), password1: $('#id_password1').val(), password2: $('#id_password2').val(), phone:$('#id_phone').val() },
 
         // handle a successful response
         success : function(response) {
@@ -29,6 +29,8 @@ $( document ).ready(function() {
             } else {
                 var error = "";
                 $.each(response, function(key, errorvalue) {
+                    console.log(key);
+                    console.log(errorvalue);
                     if (key == "password2") {
                         errorvalue.forEach(function(element) {
                             // console.log(element);

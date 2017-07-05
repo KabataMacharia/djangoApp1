@@ -1,5 +1,4 @@
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import login, authenticate
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
@@ -12,7 +11,8 @@ from .models import User
 from telesign.messaging import MessagingClient
 from telesign.util import random_with_n_digits
 
-from .forms import SignUpForm,SignInForm
+# from .forms import SignUpForm
+from .forms import SignInForm,SignUpForm
 
 # function to send otp
 def sendOTP():
@@ -34,11 +34,25 @@ def home(request):
 def signup(request):	
     if request.method == 'POST':
     	form = SignUpForm(request.POST)
+
+    	# cleaned_username = form.clean_username()
+    	cleaned_password = form.clean_password()
+    	cleaned_phone = form.clean_phone()
+    	cleaned_email = form.clean_email()
+
+    	if (type(cleaned_password) == dict):
+    		form.add_error(None, cleaned_password)
+    	if (type(cleaned_email) == dict):
+    		form.add_error(None, cleaned_email)
+
     	if form.is_valid():
-    		user,profile = form.save()
+    		# user,profile = form.save()
+    		user = form.save()
     		raw_password = form.cleaned_data.get('password1')
-    		user = authenticate(username=user.username, password=raw_password)
     		username = form.cleaned_data.get('username')
+    		user.set_password(raw_password)
+    		user.save()
+    		user = authenticate(username = username, password=raw_password)    		
     		login(request, user)
 
     		response_data = {}

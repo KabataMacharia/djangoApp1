@@ -17,7 +17,6 @@
     <form method="post" id="post-form">
         {% csrf_token %}
         {{ form|crispy }}
-      <input type="hidden" id="hidcode" name="hidcode" value="{{ code }}">
       <input class='btn btn-block btn-primary' id="auth" type="submit" value="{% trans 'Submit' %}" />
     </form>
     <p>{% trans "Not a member" %}? <a href="{% url 'signup' %}">{% trans "Register" %}</a>!</p>

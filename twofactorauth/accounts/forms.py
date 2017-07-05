@@ -23,10 +23,9 @@ User = get_user_model()
 
 class SignUpForm(forms.ModelForm):  
     password1 = forms.CharField(widget=forms.PasswordInput)
-    password2 = forms.CharField(help_text='This is for password confirmation',widget=forms.PasswordInput)
+    password2 = forms.CharField(help_text='Enter a password matching the first one',widget=forms.PasswordInput)
     username = forms.CharField(widget=forms.TextInput)
-    email = forms.CharField(help_text='A valid email address is required',max_length=100,widget=forms.EmailInput)  
-     
+    email = forms.CharField(help_text='A valid email address is required',max_length=100,widget=forms.EmailInput)     
         
     class Meta:
         model = User 

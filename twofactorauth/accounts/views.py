@@ -86,21 +86,48 @@ def signin(request):
 			# check to make sure the user exists and credentials match
 			user = authenticate( username=username, password=password)
 			if user is not None:
-				# login the user after auth
+				# store user details after auth
 				request.session['username'] = username
 				request.session['password'] = password
-				# login(request, user)
+				# user = User.objects.get(username=username)
+				# phone_number = user.phone
+				
+				# customer_id = "A7A625FD-AFE4-4E3D-AE51-DEBF9CCAA1BA"
+				# api_key = "DuhC8MQ71NO89g2eamglt64gNN31+luy0TShI4zXn6K5OEbNRf98FSC5lmUPr5pf7zZNJlKzooY0b60hki4fKQ=="
+
+				# phone_number = "+254702029382"
+				# verify_code = random_with_n_digits(5)
+				# message = "Your code is {}".format(verify_code)
+				# message_type = "OTP"
+
+				# messaging = MessagingClient(customer_id, api_key)
+				# response = messaging.message(phone_number, message, message_type)
+				# request.session['code'] = verify_code
+				verify_code = 65432
+				request.session['code'] = verify_code
 				response_data['mismatch'] = 'no'
-				request.session['code'] = 65432
 				return JsonResponse(response_data)
 			#the user doesnt have correct credentials
 			else:
 				response_data['mismatch'] = 'yes'
 				return JsonResponse(response_data)
+		# this will happen after the user has been authenticated
 		elif request_type == 'verify':
 			# if processing the code, get it and the hidden one
-			code = request.POST.get('code', 0)
-			hidcode = request.POST.get('hidcode', 0)
+			code = request.POST.get('code')
+			# hidcode = request.POST.get('hidcode')
+			# code = code.strip()
+			code = int(code)
+			hidcode = request.session['code']
+
+			# get user details from the session
+			# username = request.session['username']
+			# password = request.session['password']
+
+			# get the associated user
+			# user = User.objects.get(username=username)
+			# get the users phone number
+			# phone_number = user.phone
 
 			# make a dictionary of responses for json
 			response_data = {}
@@ -125,20 +152,7 @@ def signin(request):
 			else:
 				return JsonResponse(response_data)
 	elif request.method == 'GET' and not  request.user.is_authenticated():
-		# get the stored phone number
-		# phone_number = request.user.profile.phone
 		form = SignInForm()
-		# customer_id = "A7A625FD-AFE4-4E3D-AE51-DEBF9CCAA1BA"
-		# api_key = "DuhC8MQ71NO89g2eamglt64gNN31+luy0TShI4zXn6K5OEbNRf98FSC5lmUPr5pf7zZNJlKzooY0b60hki4fKQ=="
-
-		# phone_number = "+254702029382"
-		# verify_code = random_with_n_digits(5)
-		# message = "Your code is {}".format(verify_code)
-		# message_type = "OTP"
-
-		# messaging = MessagingClient(customer_id, api_key)
-		# response = messaging.message(phone_number, message, message_type)
-		verify_code = 65432
-		return render(request, 'login.html', {'form':form,"code":verify_code})
+		return render(request, 'login.html', {'form':form})
 	else:
 		return redirect('home')

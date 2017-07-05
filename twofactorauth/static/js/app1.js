@@ -101,7 +101,7 @@ $( document ).ready(function() {
         $.ajax({
         url : "http://127.0.0.1:8000/login/",
         type : "POST", // http method
-        data : { csrfmiddlewaretoken: csrftoken, code: $('#id_code').val(), hidcode:$('#hidcode').val(), type_post:'verify' },
+        data : { csrfmiddlewaretoken: csrftoken, code: $('#id_code').val(),  type_post:'verify' },
 
         // handle a successful response
         success : function(response) {

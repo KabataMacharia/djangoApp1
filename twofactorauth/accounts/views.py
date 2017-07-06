@@ -2,6 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from django.views.decorators.csrf import ensure_csrf_cookie
 # from django.contrib.auth.models import User
 from django.http import JsonResponse
 from .models import User
@@ -10,32 +11,28 @@ from .models import User
 # telesign imports
 from telesign.messaging import MessagingClient
 from telesign.util import random_with_n_digits
+# from telesign.api import Verify
 
-# from .forms import SignUpForm
 from .forms import SignInForm,SignUpForm
 
-# function to send otp
-def sendOTP():
-	customer_id = "A7A625FD-AFE4-4E3D-AE51-DEBF9CCAA1BA"
-	api_key = "DuhC8MQ71NO89g2eamglt64gNN31+luy0TShI4zXn6K5OEbNRf98FSC5lmUPr5pf7zZNJlKzooY0b60hki4fKQ=="
+# customer_id = "A7A625FD-AFE4-4E3D-AE51-DEBF9CCAA1BA"
+# secret_key = "DuhC8MQ71NO89g2eamglt64gNN31+luy0TShI4zXn6K5OEbNRf98FSC5lmUPr5pf7zZNJlKzooY0b60hki4fKQ=="
+# user_verification = Verify(customer_id, secret_key)
 
-	phone_number = "+254702029382"
-	verify_code = random_with_n_digits(5)
-	message = "Your code is {}".format(verify_code)
-	message_type = "OTP"
-
-	messaging = MessagingClient(customer_id, api_key)
-	response = messaging.message(phone_number, message, message_type)
-
+# phone_info = user_verification.sms("+254702029382", use_case_code="ATCK")
+# user_entered_verifycode = "3456"
+# status_info = user_verification.status(phone_info.data["reference_id"],
+#     verify_code=user_entered_verifycode)
+# if status_info.data["verify"]["code_state"] == 'VALID':
+# 	pass
 @login_required
 def home(request):
     return render(request, 'home.html')
-
+# @ensure_csrf_cookie
 def signup(request):	
     if request.method == 'POST':
     	form = SignUpForm(request.POST)
-
-    	# cleaned_username = form.clean_username()
+    	# this is for the form validations
     	cleaned_password = form.clean_password()
     	cleaned_phone = form.clean_phone()
     	cleaned_email = form.clean_email()
@@ -46,7 +43,6 @@ def signup(request):
     		form.add_error(None, cleaned_email)
 
     	if form.is_valid():
-    		# user,profile = form.save()
     		user = form.save()
     		raw_password = form.cleaned_data.get('password1')
     		username = form.cleaned_data.get('username')
@@ -67,7 +63,7 @@ def signup(request):
     else:
         form = SignUpForm()
         return render(request, 'signup.html', {'form': form})
-
+# @ensure_csrf_cookie
 def signin(request):
 	if request.method == 'POST':
 		# get the part of the form being processed
@@ -119,15 +115,6 @@ def signin(request):
 			# code = code.strip()
 			code = int(code)
 			hidcode = request.session['code']
-
-			# get user details from the session
-			# username = request.session['username']
-			# password = request.session['password']
-
-			# get the associated user
-			# user = User.objects.get(username=username)
-			# get the users phone number
-			# phone_number = user.phone
 
 			# make a dictionary of responses for json
 			response_data = {}

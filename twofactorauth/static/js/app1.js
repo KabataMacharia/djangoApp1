@@ -19,6 +19,9 @@ $( document ).ready(function() {
     $.ajax({
         url : "http://127.0.0.1:8000/signup/", // the endpoint
         type : "POST", // http method
+        xhrFields: {
+        withCredentials: true
+    },
         data : { username: $('#id_username').val(),email: $('#id_email').val(), password1: $('#id_password1').val(), password2: $('#id_password2').val(), phone:$('#id_phone').val() },
 
         // handle a successful response
@@ -62,6 +65,9 @@ $( document ).ready(function() {
     $.ajax({
         url : "http://127.0.0.1:8000/login/", // the endpoint
         type : "POST", // http method
+        xhrFields: {
+        withCredentials: true
+        },
         data : {csrfmiddlewaretoken: csrftoken, username: $('#id_username').val(), password: $('#id_password').val(), type_post:'auth' },
 
         // handle a successful response
@@ -101,6 +107,9 @@ $( document ).ready(function() {
         $.ajax({
         url : "http://127.0.0.1:8000/login/",
         type : "POST", // http method
+        xhrFields: {
+        withCredentials: true
+        },
         data : { csrfmiddlewaretoken: csrftoken, code: $('#id_code').val(),  type_post:'verify' },
 
         // handle a successful response

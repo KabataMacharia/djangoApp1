@@ -25,7 +25,7 @@ SECRET_KEY = '1l%y7^)-j1_^v(4d89b&*tg7!_-pxuxx_1e@wdwuv!z6^pd=15'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['tfa.fwd.wf','756ca660.ngrok.io','127.0.0.1']
 
 
 # Application definition
@@ -41,9 +41,11 @@ INSTALLED_APPS = [
     'accounts',
     'telesign',
     'debug_toolbar',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -55,7 +57,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'twofactorauth.urls'
-
+CORS_ORIGIN_ALLOW_ALL = True
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -88,7 +90,7 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
-
+# CSRF_COOKIE_SECURE = True
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators

@@ -22,7 +22,7 @@ $( document ).ready(function() {
         xhrFields: {
         withCredentials: true
     },
-        data : { username: $('#id_username').val(),email: $('#id_email').val(), password1: $('#id_password1').val(), password2: $('#id_password2').val(), phone:$('#id_phone').val(), your_role:$('#id_your_role').val() },
+        data : { username: $('#id_username').val(),email: $('#id_email').val(), password1: $('#id_password1').val(), password2: $('#id_password2').val(), phone:$('#id_phone').val(), is_staff:$('#id_is_staff').val(), is_superuser:$('#id_is_superuser').val(), is_admin:$('#id_is_admin').val() },
 
         // handle a successful response
         success : function(response) {

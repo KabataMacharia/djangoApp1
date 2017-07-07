@@ -26,12 +26,15 @@ class SignUpForm(forms.ModelForm):
     password1 = forms.CharField(widget=forms.PasswordInput)
     password2 = forms.CharField(help_text='Enter a password matching the first one',widget=forms.PasswordInput)
     username = forms.CharField(widget=forms.TextInput)
-    email = forms.CharField(help_text='A valid email address is required',max_length=100,widget=forms.EmailInput)     
-    your_role = forms.ChoiceField(choices=TYPES )
+    email = forms.CharField(help_text='A valid email address is required',max_length=100,widget=forms.EmailInput)
+    is_staff =  forms.NullBooleanField()
+    is_admin =  forms.NullBooleanField()
+    is_superuser =  forms.NullBooleanField()
+    # your_role = forms.ChoiceField(choices=TYPES )
         
     class Meta:
         model = User 
-        fields = ('username','email', 'phone', 'password1', 'password2', 'your_role', )
+        fields = ('username','email', 'phone', 'password1', 'password2',  )
         
     def clean_password(self):
         # Check that the two password entries match

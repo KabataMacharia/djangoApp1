@@ -69,18 +69,32 @@ def signup(request):
     		form.add_error(None, cleaned_email)
 
     	if form.is_valid():
-    		role = request.POST.get('your_role')
+    		# role = request.POST.get('your_role')
+    		is_staff = request.POST.get('is_staff')
+    		is_superuser = request.POST.get('is_superuser')
+    		is_admin = request.POST.get('is_admin')
+
     		user = form.save()
     		raw_password = form.cleaned_data.get('password1')
     		username = form.cleaned_data.get('username')
     		user.set_password(raw_password)
-    		# user.is_staff = True
-    		if role == 'STAFF':
+    		if int(is_staff) == 2:
     			user.is_staff = True
-    		elif role == 'SUPER':
+    		else:
+    			user.is_staff = False
+
+    		if int(is_admin) == 2:
+    			user.is_staff = True
+    			user.is_admin = True
+    		else:
+    			user.is_admin = False
+
+    		if int(is_superuser) == 2:
+    			user.is_staff = True
+    			user.is_admin = True
     			user.is_superuser = True
     		else:
-    			user.is_admin = True
+    			user.is_superuser = False
     		user.save()
     		user = authenticate(username = username, password=raw_password)    		
     		login(request, user)
@@ -91,7 +105,10 @@ def signup(request):
     	else:
     		response_data = {}
     		response_data['registered'] = "no"
-    		response_data['role'] = request.POST.get('your_role')
+    		# response_data['role'] = request.POST.get('your_role')
+    		response_data['is_staff'] = request.POST.get('is_staff')
+    		response_data['is_superuser'] = request.POST.get('is_superuser')
+    		response_data['is_admin'] = request.POST.get('is_admin')
     		return JsonResponse(form.errors)
     elif request.user.is_authenticated():
     	return redirect('home')

@@ -14,18 +14,19 @@ from django.contrib.auth.base_user import BaseUserManager
 class UserManager(BaseUserManager):
 	use_in_migrations = True
 
-	def _create_user(self, username,email, password,phone, **extra_fields):
+	def _create_user(self, username,email, password,phone,is_superuser, is_staff,is_admin ,**extra_fields):
 		if not email:
 			raise ValueError('The given email must be set')
 		email = self.normalize_email(email)
-		user = self.model(email=email,username=username, phone=phone,**extra_fields)
+		user = self.model(email=email,username=username, phone=phone,is_superuser=is_superuser,is_staff=is_staff,is_admin=is_admin,**extra_fields)
 		user.set_password(password)
 		user.save(using=self._db)
 		return user
 
-	def create_user(self,username, email,phone, password=None, **extra_fields):
+	def create_user(self,username, email,phone,is_superuser, is_staff,is_admin,password=None, **extra_fields):
 		extra_fields.setdefault('is_superuser', False)
-		return self._create_user(username,email, password,phone, **extra_fields)
+		# extra_fields = {}
+		return self._create_user(username,email, password,phone,is_superuser, is_staff,is_admin,**extra_fields)
 
 	def create_superuser(self,username, email, password, phone, **extra_fields):
 		extra_fields.setdefault('is_superuser', True)
@@ -45,6 +46,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 	first_name = models.CharField( max_length=50, blank=True)
 	last_name = models.CharField( max_length=50, blank=True)
 	date_joined = models.DateTimeField( auto_now_add=True)
+	is_superuser = models.BooleanField(default=False)
 	is_active = models.BooleanField( default=True)
 	is_staff = models.BooleanField(default=False)
 	is_admin = models.BooleanField(default=False)

@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+# from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import login, authenticate
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
@@ -6,7 +7,10 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 # from django.contrib.auth.models import User
 from django.http import JsonResponse
 from .models import User
-
+from .decorators import admin_member_required,superuser_member_required,staff_member_required
+# imports for class based views
+from django.views.generic.base import TemplateView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 # telesign imports
 from telesign.messaging import MessagingClient
@@ -25,10 +29,32 @@ from .forms import SignInForm,SignUpForm
 #     verify_code=user_entered_verifycode)
 # if status_info.data["verify"]["code_state"] == 'VALID':
 # 	pass
+@staff_member_required
+def staff_view(request):
+	return render(request, 'staff.html')
+
+@admin_member_required
+def admin_view(request):
+	return render(request, 'admin.html')
+
+@superuser_member_required
+def super_user_view(request):
+	return render(request, 'superuser.html')
+@login_required
+def not_allowed(request):
+    return render(request, 'not_member.html')
+
 @login_required
 def home(request):
     return render(request, 'home.html')
-# @ensure_csrf_cookie
+# class based view for home
+class home(LoginRequiredMixin,TemplateView):
+	template_name = 'home.html'
+
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+		return context
+
 def signup(request):	
     if request.method == 'POST':
     	form = SignUpForm(request.POST)
@@ -43,10 +69,18 @@ def signup(request):
     		form.add_error(None, cleaned_email)
 
     	if form.is_valid():
+    		role = request.POST.get('your_role')
     		user = form.save()
     		raw_password = form.cleaned_data.get('password1')
     		username = form.cleaned_data.get('username')
     		user.set_password(raw_password)
+    		# user.is_staff = True
+    		if role == 'STAFF':
+    			user.is_staff = True
+    		elif role == 'SUPER':
+    			user.is_superuser = True
+    		else:
+    			user.is_admin = True
     		user.save()
     		user = authenticate(username = username, password=raw_password)    		
     		login(request, user)
@@ -57,6 +91,7 @@ def signup(request):
     	else:
     		response_data = {}
     		response_data['registered'] = "no"
+    		response_data['role'] = request.POST.get('your_role')
     		return JsonResponse(form.errors)
     elif request.user.is_authenticated():
     	return redirect('home')

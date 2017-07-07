@@ -25,7 +25,7 @@ SECRET_KEY = '1l%y7^)-j1_^v(4d89b&*tg7!_-pxuxx_1e@wdwuv!z6^pd=15'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['tfa.fwd.wf','756ca660.ngrok.io','127.0.0.1']
+ALLOWED_HOSTS = []
 
 
 # Application definition

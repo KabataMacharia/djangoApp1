@@ -22,7 +22,12 @@ from django.contrib import admin
 import debug_toolbar
 urlpatterns = [
     
-    url(r'^$', views.home, name='home'),
+    # url(r'^$', views.home, name='home'),
+    url(r'^$', views.home.as_view(), name='home'),
+    url(r'^staff/$', views.staff_view, name='staff'),
+    url(r'^admin_view/$', views.admin_view, name='admin'),
+    url(r'^super_user/$', views.super_user_view, name='superuser'),
+    url(r'^not_allowed/$', views.not_allowed, name='not_allowed'),
     # url(r'^login/$', auth_views.login, {'template_name': 'login.html'}, name='login'),
     url(r'^logout/$', auth_views.logout, {'next_page': 'login'}, name='logout'),
     url(r'^signup/$', views.signup, name='signup'),

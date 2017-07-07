@@ -99,7 +99,7 @@ $( document ).ready(function() {
 	// enable the previously disabled code field
 	$('#div_id_code').removeClass( "hidden" );
 	$('#id_code').prop( "disabled", false );
-    $('input[type="submit"]').replaceWith('<input class="btn btn-block btn-primary" id="verify" type="submit" name="button" value="verify code"/>');
+    $('input[type="submit"]').replaceWith('<input class="btn btn-block btn-success" id="verify" type="submit" name="button" value="verify code"/>');
 	}
 
     $(document).on('click','#verify',(function(e) {

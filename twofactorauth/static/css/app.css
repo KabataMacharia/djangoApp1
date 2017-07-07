@@ -4,6 +4,6 @@
 body{
 	background-color: white;
 }
-/*.well{
-background: white;
-}*/
+.well{
+background-color: cyan !important;
+}

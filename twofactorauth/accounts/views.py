@@ -140,19 +140,19 @@ def signin(request):
 				# user = User.objects.get(username=username)
 				# phone_number = user.phone
 				
-				customer_id = "A7A625FD-AFE4-4E3D-AE51-DEBF9CCAA1BA"
-				api_key = "DuhC8MQ71NO89g2eamglt64gNN31+luy0TShI4zXn6K5OEbNRf98FSC5lmUPr5pf7zZNJlKzooY0b60hki4fKQ=="
+				# customer_id = "A7A625FD-AFE4-4E3D-AE51-DEBF9CCAA1BA"
+				# api_key = "DuhC8MQ71NO89g2eamglt64gNN31+luy0TShI4zXn6K5OEbNRf98FSC5lmUPr5pf7zZNJlKzooY0b60hki4fKQ=="
 
-				phone_number = "+254702029382"
-				verify_code = random_with_n_digits(5)
-				message = "Your code is {}".format(verify_code)
-				message_type = "OTP"
+				# phone_number = "+254702029382"
+				# verify_code = random_with_n_digits(5)
+				# message = "Your code is {}".format(verify_code)
+				# message_type = "OTP"
 
-				messaging = MessagingClient(customer_id, api_key)
-				response = messaging.message(phone_number, message, message_type)
-				request.session['code'] = verify_code
-				# verify_code = 65432
+				# messaging = MessagingClient(customer_id, api_key)
+				# response = messaging.message(phone_number, message, message_type)
 				# request.session['code'] = verify_code
+				verify_code = 65432
+				request.session['code'] = verify_code
 				response_data['mismatch'] = 'no'
 				return JsonResponse(response_data)
 			#the user doesnt have correct credentials
@@ -164,8 +164,8 @@ def signin(request):
 			# if processing the code, get it and the hidden one
 			code = request.POST.get('code')
 			# hidcode = request.POST.get('hidcode')
-			code = code.strip()
-			# code = int(code)
+			# code = code.strip()
+			code = int(code)
 			hidcode = request.session['code']
 
 			# make a dictionary of responses for json

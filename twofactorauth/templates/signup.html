@@ -1,4 +1,4 @@
-{% extends 'base1.html' %}
+{% extends 'base.html' %}
 {% load i18n %}
 {% load crispy_forms_tags %}
 
@@ -7,14 +7,14 @@
   <div class="col-md-2 col-sm-2 col-lg-2">
   </div>
   <div class="col-md-6 col-sm-6 col-lg-6">
-    <h2>Sign up</h2>
-    
+    <h2>Sign up here</h2>
+    <div class="well">
     <form method="post" id="signup-form">
       {% csrf_token %}
       {{ form|crispy }}
-      <input class='btn btn-block btn-primary' type="submit" value="{% trans 'Sign up' %}" />
+      <input class='btn btn-block btn-success' type="submit" value="{% trans 'Sign up' %}" />
     </form>
-    
+    </div>
   </div>
   <div class="col-md-4 col-sm-4 col-lg-4">
     <div id="errors">

@@ -1,4 +1,4 @@
-{% extends 'base1.html' %}
+{% extends 'base.html' %}
 {% load i18n %}
 {% load crispy_forms_tags %}
 
@@ -6,6 +6,7 @@
 
   
   <div class="row">
+  <!-- <div class="col-xs-4 col-md-4 col-sm-4 col-lg-4"> -->
   <div class="col-md-4 col-sm-4 col-lg-4">
   </div>
 
@@ -14,12 +15,17 @@
   <div id="errors">
 
   </div>
+  <div  class="well">
     <form method="post" id="post-form">
         {% csrf_token %}
         {{ form|crispy }}
-      <input class='btn btn-block btn-primary' id="auth" type="submit" value="{% trans 'Submit' %}" />
+      <input class='btn btn-block btn-success' id="auth" type="submit" value="{% trans 'Submit' %}" />
     </form>
-    <p>{% trans "Not a member" %}? <a href="{% url 'signup' %}">{% trans "Register" %}</a>!</p>
+  </div>
+  <div class="well">
+    <p>{% trans "Not a member" %}? <a  href="{% url 'signup' %}">{% trans "Register" %}</a>!</p>
+  </div>
+    
   </div>
   </div>
 
@@ -27,8 +33,4 @@
   </div>
 
   </div>
-{% endblock %}
-
-{% block javascript %}
-
 {% endblock %}

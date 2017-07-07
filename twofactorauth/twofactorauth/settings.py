@@ -40,13 +40,13 @@ INSTALLED_APPS = [
     'crispy_forms',
     'accounts',
     'telesign',
-    'debug_toolbar',
+    # 'debug_toolbar',
     'corsheaders',
 ]
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',

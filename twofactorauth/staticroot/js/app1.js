@@ -1,6 +1,6 @@
 $( document ).ready(function() {
+    // hide the code field on the signin form
 	$('#div_id_code').addClass( "hidden" );
-	// $('#div_id_code').attr("disabled", "disabled");
 	$('#id_code').prop( "disabled", true );
 
     // $("h3").text("context")
@@ -19,7 +19,10 @@ $( document ).ready(function() {
     $.ajax({
         url : "http://127.0.0.1:8000/signup/", // the endpoint
         type : "POST", // http method
-        data : { username: $('#id_username').val(), password1: $('#id_password1').val(), password2: $('#id_password2').val(), phone:$('#id_phone').val() },
+        xhrFields: {
+        withCredentials: true
+    },
+        data : { username: $('#id_username').val(),email: $('#id_email').val(), password1: $('#id_password1').val(), password2: $('#id_password2').val(), phone:$('#id_phone').val(), is_staff:$('#id_is_staff').val(), is_superuser:$('#id_is_superuser').val(), is_admin:$('#id_is_admin').val() },
 
         // handle a successful response
         success : function(response) {
@@ -27,27 +30,33 @@ $( document ).ready(function() {
             if (response.registered == "yes") {
                 window.location.replace('http://127.0.0.1:8000');
             } else {
-                // console.log(JSON.stringify(response))
-                // var result = $.parseJSON(response);
-                var error = ""
+                var error = "";
                 $.each(response, function(key, errorvalue) {
-                    //display the key and value pair
-                   console.log( errorvalue);
-                   // error += "<div class='alert alert-danger' role='alert'><span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span> <span class='sr-only'>Error:</span>"+errorvalue+"</div>"
-                   // error += "<p class='alert alert-danger' role='alert'><span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span> <span class='sr-only'>Error:</span>"+errorvalue+"</p>"
-
-                  
+                    console.log(key);
+                    console.log(errorvalue);
+                    if (key == "password2") {
+                        errorvalue.forEach(function(element) {
+                            // console.log(element);
+                            error += "<p class='alert alert-danger' role='alert'><span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span> <span class='sr-only'>Error:</span>"+element+"</p>";
+                        });
+                    } else {
+                        var errorvalue=errorvalue[0];
+                        // console.log( errorvalue);
+                        error += "<p class='alert alert-danger' role='alert'><span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span> <span class='sr-only'>Error:</span>"+errorvalue+"</p>";
+                    }                  
                 });
+                // if (typeof(response.exists) != "undefined") {
+                //     error += "<p class='alert alert-danger' role='alert'><span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span> <span class='sr-only'>Error:</span>The phone number must be unique</p>";
+                // } 
+                // display the errors
                  $('#errors').html(error);
-                // var error = "<div class='alert alert-danger' role='alert'><span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span> <span class='sr-only'>Error:</span> JSON.stringify(response)</div>"
-                // $('#errors').html(error);
             }
             
         },
 
         // handle a non-successful response
         error : function(xhr,errmsg,err) {
-            console.log("error in signup")
+            console.log("error in signup");
         }
     });
 	};
@@ -56,6 +65,9 @@ $( document ).ready(function() {
     $.ajax({
         url : "http://127.0.0.1:8000/login/", // the endpoint
         type : "POST", // http method
+        xhrFields: {
+        withCredentials: true
+        },
         data : {csrfmiddlewaretoken: csrftoken, username: $('#id_username').val(), password: $('#id_password').val(), type_post:'auth' },
 
         // handle a successful response
@@ -70,7 +82,7 @@ $( document ).ready(function() {
 
         // handle a non-successful response
         error : function(xhr,errmsg,err) {
-            alert("error in auth")
+            console.log("error in auth");
 	        }
 	    });
 	};
@@ -95,7 +107,10 @@ $( document ).ready(function() {
         $.ajax({
         url : "http://127.0.0.1:8000/login/",
         type : "POST", // http method
-        data : { csrfmiddlewaretoken: csrftoken, code: $('#id_code').val(), hidcode:$('#hidcode').val(), type_post:'verify' },
+        xhrFields: {
+        withCredentials: true
+        },
+        data : { csrfmiddlewaretoken: csrftoken, code: $('#id_code').val(),  type_post:'verify' },
 
         // handle a successful response
         success : function(response) {
@@ -103,18 +118,17 @@ $( document ).ready(function() {
         		window.location.replace('http://127.0.0.1:8000');
                 // console.log('hello2');
         	} else if (response.correct == false) {
-        		var error = "<div class='alert alert-danger' role='alert'><span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span> <span class='sr-only'>Error:</span> The code you entered is incorrect</div>"
-        		// $('#errors').html('');
+        		var error = "<div class='alert alert-danger' role='alert'><span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span> <span class='sr-only'>Error:</span> The code you entered is incorrect</div>";
         		$('#errors').html(error);
         	}else{
-        		var error = "<div class='alert alert-danger' role='alert'><span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span> <span class='sr-only'>Error:</span> Anonymous error</div>"
+        		var error = "<div class='alert alert-danger' role='alert'><span class='glyphicon glyphicon-exclamation-sign' aria-hidden='true'></span> <span class='sr-only'>Error:</span> Anonymous error</div>";
         		$('#errors').html(error);
         	}
         },
 
         // handle a non-successful response
         error : function(xhr,errmsg,err) {
-            alert("error in verify")
+            console.log("error in verify");
             }
             });
         }));

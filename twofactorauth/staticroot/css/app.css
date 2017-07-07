@@ -1,3 +1,7 @@
 .hidden{
 	display: none;
 }
+
+#formdiv{
+	border: solid black 2px;
+}

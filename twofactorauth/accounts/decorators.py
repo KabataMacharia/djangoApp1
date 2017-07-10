@@ -1,8 +1,7 @@
-from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.contrib.auth.decorators import user_passes_test
 
 
-def staff_member_required(view_func=None, redirect_field_name='not_allowed',
+def staff_member_required(view_func=None, redirect_field_name=None,
                           login_url='not_allowed'):
     """
     Decorator for views that checks that the user is logged in and is a staff
@@ -17,7 +16,8 @@ def staff_member_required(view_func=None, redirect_field_name='not_allowed',
         return actual_decorator(view_func)
     return actual_decorator
 
-def admin_member_required(view_func=None, redirect_field_name="not_allowed",
+
+def admin_member_required(view_func=None, redirect_field_name=None,
                           login_url='not_allowed'):
     """
     Decorator for views that checks that the user is logged in and is an admin
@@ -32,8 +32,9 @@ def admin_member_required(view_func=None, redirect_field_name="not_allowed",
         return actual_decorator(view_func)
     return actual_decorator
 
-def superuser_member_required(view_func=None, redirect_field_name=REDIRECT_FIELD_NAME,
-                          login_url='not_allowed'):
+
+def superuser_member_required(view_func=None, redirect_field_name=None,
+                              login_url='not_allowed'):
     """
     Decorator for views that checks that the user is logged in and is a superuser
     member, redirecting if necessary.
@@ -47,8 +48,9 @@ def superuser_member_required(view_func=None, redirect_field_name=REDIRECT_FIELD
         return actual_decorator(view_func)
     return actual_decorator
 
-def staff_superuser_not_allowed(view_func=None, redirect_field_name=REDIRECT_FIELD_NAME,
-                          login_url='not_allowed'):
+
+def staff_superuser_not_allowed(view_func=None, redirect_field_name=None,
+                                login_url='login'):
     actual_decorator = user_passes_test(
         lambda u: u.is_active and not u.is_superuser and not u.is_staff,
         login_url=login_url,

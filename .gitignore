@@ -102,3 +102,4 @@ ENV/
 
 #migrations folder  
 migrations/
+.idea/

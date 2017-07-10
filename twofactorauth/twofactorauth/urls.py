@@ -21,18 +21,26 @@ from accounts import views
 from django.contrib import admin
 import debug_toolbar
 urlpatterns = [
-    
+    # urls for the function based views
     # url(r'^$', views.home, name='home'),
+    # url(r'^staff/$', views.staff_view, name='staff'),
+    # url(r'^admin_view/$', views.admin_view, name='admin'),
+    # url(r'^super_user/$', views.super_user_view, name='superuser'),
+    # url(r'^not_allowed/$', views.not_allowed, name='not_allowed'),
+    # url(r'^login/$', views.signin, name='login'),
+    # url(r'^signup/$', views.signup, name='signup'),
+
+    # urls for the class based views
     url(r'^$', views.home.as_view(), name='home'),
-    url(r'^staff/$', views.staff_view, name='staff'),
-    url(r'^admin_view/$', views.admin_view, name='admin'),
-    url(r'^super_user/$', views.super_user_view, name='superuser'),
-    url(r'^not_allowed/$', views.not_allowed, name='not_allowed'),
-    # url(r'^login/$', auth_views.login, {'template_name': 'login.html'}, name='login'),
+    url(r'^staff/$', views.staff_view.as_view(), name='staff'),
+    url(r'^admin_view/$', views.admin_view.as_view(), name='admin'),
+    url(r'^super_user/$', views.super_user.as_view(), name='superuser'),
+    url(r'^not_allowed/$', views.not_allowed.as_view(), name='not_allowed'),
+    url(r'^login/$', views.signin.as_view(), name='login'),
+    url(r'^signup/$', views.signup.as_view(), name='signup'),   
     url(r'^logout/$', auth_views.logout, {'next_page': 'login'}, name='logout'),
-    url(r'^signup/$', views.signup, name='signup'),
-    url(r'^login/$', views.signin, name='login'),
-    # url(r'^verify/$', views.verify, name='verify'),
+    
+    # urls for third party apps
     url(r'^admin/', admin.site.urls),
     url(r'^__debug__/', include(debug_toolbar.urls)),
 ]

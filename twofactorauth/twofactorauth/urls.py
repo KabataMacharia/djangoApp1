@@ -35,6 +35,7 @@ urlpatterns = [
     url(r'^staff/$', views.staff_view.as_view(), name='staff'),
     url(r'^admin_view/$', views.admin_view.as_view(), name='admin'),
     url(r'^super_user/$', views.super_user.as_view(), name='superuser'),
+    url(r'^normal_user/$', views.normal_user.as_view(), name='normaluser'),
     url(r'^not_allowed/$', views.not_allowed.as_view(), name='not_allowed'),
     url(r'^login/$', views.signin.as_view(), name='login'),
     url(r'^signup/$', views.signup.as_view(), name='signup'),   

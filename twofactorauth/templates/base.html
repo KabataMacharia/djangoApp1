@@ -45,6 +45,7 @@
            <li><a href="{% url 'login' %}">login</a> </li>
            <li><a href="{% url 'signup' %}">signup</a></li>
           {% else %}
+          <li><a href="{% url 'normaluser' %}">Normal page</a></li>
           <li><a href="{% url 'staff' %}">staff page</a></li>
           <li><a href="{% url 'admin' %}">admin page</a></li>
           <li><a href="{% url 'superuser' %}">superuser page</a></li>

@@ -8,7 +8,7 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 # from django.contrib.auth.models import User
 from django.http import JsonResponse
 from .models import User
-from .decorators import admin_member_required,superuser_member_required,staff_member_required
+from .decorators import admin_member_required,superuser_member_required,staff_member_required,staff_superuser_not_allowed
 # imports for class based views
 from django.views.generic.base import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -31,31 +31,26 @@ from .forms import SignInForm,SignUpForm
 #     verify_code=user_entered_verifycode)
 # if status_info.data["verify"]["code_state"] == 'VALID':
 # 	pass
-# @staff_member_required
-# def staff_view(request):
-# 	return render(request, 'staff.html')
+
 @method_decorator(staff_member_required, name='dispatch')
 class staff_view(View):
 	def get(self, request):
 		return render(request, 'staff.html')
-# @admin_member_required
-# def admin_view(request):
-# 	return render(request, 'admin.html')
 
 @method_decorator(admin_member_required, name='dispatch')
 class admin_view(View):
 	def get(self, request):
 		return render(request, 'admin.html')
-# @superuser_member_required
-# def super_user_view(request):
-# 	return render(request, 'superuser.html')
+
 @method_decorator(superuser_member_required, name='dispatch')
 class super_user(View):
 	def get(self, request):
 		return render(request, 'superuser.html')
-# @login_required
-# def not_allowed(request):
-#     return render(request, 'not_member.html')
+
+@method_decorator(staff_superuser_not_allowed, name='dispatch')
+class normal_user(View):
+	def get(self, request):
+		return render(request, 'normaluser.html')
 
 @method_decorator(login_required, name='dispatch')
 class not_allowed(View):
@@ -79,7 +74,7 @@ class signup(View):
 		else:
 			return render(request, self.template_name, {'form': form})
 	def post(self, request, *args, **kwargs):
-		form = SignUpForm(request.POST)
+		form = self.form_class(request.POST)
 		# this is for the form validations
 		cleaned_password = form.clean_password()
 		cleaned_phone = form.clean_phone()
